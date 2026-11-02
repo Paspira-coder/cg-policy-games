@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CG Policy Games</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;700&family=IBM+Plex+Sans+Thai:wght@400;600&display=swap">
+<style>
+:root{--bg:#fff;--ink:#19226D;--muted:#5B6391;--line:#D6DBEE;--cyan:#00A5DB;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Thai","Leelawadee UI",Tahoma,sans-serif;display:grid;place-items:center;padding:32px 16px}
+main{width:min(100%,900px);display:grid;gap:24px}
+h1{font-family:Kanit,sans-serif;font-size:clamp(32px,5vw,56px);margin:0}
+h1 span{color:var(--cyan)}
+p{color:var(--muted);margin:0;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+a.card{display:grid;gap:8px;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);border-radius:16px;padding:24px;transition:border-color .15s,transform .15s}
+a.card:hover,a.card:focus-visible{border-color:var(--ink);transform:translateY(-2px);outline:none}
+.n{font-size:13px;letter-spacing:1.2px;color:var(--muted);font-weight:600}
+.t{font-family:Kanit,sans-serif;font-size:28px;font-weight:700}
+.d{color:var(--muted);line-height:1.6}
+</style></head>
+<body><main>
+<h1>CG Policy <span>Games</span></h1>
+<p>เลือกเกมที่จะเล่น</p>
+<div class="grid">
+<a class="card" href="crack-the-code.html"><span class="n">ACTIVITY 1</span><span class="t">Crack the Code</span><span class="d">เรียงตัวอักษรให้เป็นคำ 15 ชุด ชุดละ 5 คำ · 6 ทีม ทีมละ 60 วินาที</span></a>
+<a class="card" href="policy-survivor.html"><span class="n">ACTIVITY 2</span><span class="t">Policy Survivor รู้จริง ต้องรอด!</span><span class="d">30 คำถาม แข่งเดี่ยวแบบคัดออก พร้อมเฉลยและอ้างอิงนโยบาย</span></a>
+</div>
+</main></body></html>

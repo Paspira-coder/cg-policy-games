@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Policy Survivor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: follows Example.pptx — white slide, navy title top-left, big question, green/red answer table. Deliberately single light theme to match the corporate slide. */
+:root{
+  --bg:#FFFFFF; --ink:#19226D; --muted:#5B6391; --line:#D6DBEE; --soft:#F3F6FC;
+  --cyan:#00A5DB; --go:#00B050; --stop:#FF0000; --hl:#FFF4C2;
+  --display:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  --body:"IBM Plex Sans Thai","Leelawadee UI","Tahoma",sans-serif;
+ 
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;display:flex;flex-direction:column}
+.app{flex:1;min-height:0;width:100%;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 8px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.title{font-family:var(--body);font-weight:700;font-size:clamp(17px,1.7vw,22px);margin:0}
+.title b{font-size:1.12em}
+.spacer{flex:1}
+button{font-family:var(--body);cursor:pointer;border-radius:8px;font-size:16px;font-weight:600;padding:9px 16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);transition:background .15s,transform .08s}
+button:hover{background:var(--soft)}button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+button:disabled{opacity:.35;cursor:not-allowed}
+.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.primary:hover{background:#26318A}
+.big{font-size:clamp(17px,1.8vw,22px);padding:12px 24px}
+.label{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;padding:0 5px;background:var(--soft)}
+.surv{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:10px;padding:4px 8px}
+.surv .n{font-family:var(--display);font-weight:700;font-size:26px;color:var(--ink);text-align:center;font-variant-numeric:tabular-nums;background:transparent;border:0;width:3.2ch}
+.surv button{padding:2px 12px;font-size:20px}
+main{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
+.qhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.qno{font-family:var(--display);font-weight:700;font-size:clamp(22px,2.4vw,32px)}
+.qno small{font-size:.6em;color:var(--muted);font-weight:400}
+.tag{font-size:14px;padding:3px 12px;border-radius:999px;background:var(--hl);color:var(--ink);font-weight:600}
+.clock{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.2vw,44px);font-variant-numeric:tabular-nums;min-width:2.4ch;text-align:right}
+.clock.warn{color:var(--stop)}
+.bar{height:6px;border-radius:99px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--cyan);transition:width 1s linear}
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:calc(var(--k,1) * clamp(16px,3.4vh,40px));overflow:auto;padding-block:12px}
+.question{font-family:var(--body);font-weight:700;font-size:calc(var(--k,1) * clamp(28px,3.8vw,58px));line-height:1.45;text-wrap:balance;text-align:left;margin:0;max-width:42ch;width:100%}
+.answers{display:grid;grid-template-columns:1fr 1fr;width:min(100%,860px);border:1.5px solid var(--ink)}
+.answers div{display:flex;align-items:center;justify-content:center;gap:10px;padding:calc(var(--k,1) * clamp(14px,2.4vh,26px)) 12px;font-family:var(--body);font-weight:700;font-size:calc(var(--k,1) * clamp(28px,3.6vw,52px));color:#fff}
+.answers .yes{background:var(--go)}
+.answers .no{background:var(--stop);border-left:1.5px solid var(--ink)}
+.reveal{width:100%;max-width:46ch;display:flex;flex-direction:column;gap:clamp(12px,2vh,22px);text-align:center;align-items:center}
+.reveal .a{font-family:var(--body);font-weight:700;font-size:calc(var(--k,1) * clamp(30px,4vw,60px));line-height:1.3}
+.reveal .a .yes{color:var(--go)}.reveal .a .no{color:var(--stop)}
+.reveal .why{font-size:calc(var(--k,1) * clamp(24px,3vw,44px));line-height:1.5;font-weight:500;text-wrap:balance}
+.reveal .ref{font-size:calc(var(--k,1) * clamp(15px,1.4vw,19px));color:var(--muted)}
+.reveal .ref b{color:var(--ink)}
+.reveal .q{font-size:calc(var(--k,1) * clamp(14px,1.3vw,18px));color:var(--muted);max-width:70ch;line-height:1.5}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.kbd{color:var(--muted);font-size:12px}
+/* intro */
+.intro{flex:1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:32px;align-items:center}
+.intro h2{font-family:var(--body);font-weight:700;font-size:clamp(42px,6vw,88px);line-height:1.1;margin:0}
+.intro h2 span{color:var(--cyan);display:block}
+.intro p{font-size:clamp(17px,1.6vw,21px);line-height:1.65;max-width:50ch}
+.chip{display:inline-block;padding:0 10px;color:#fff;font-weight:700;border-radius:4px}
+.chip.yes{background:var(--go)}.chip.no{background:var(--stop)}
+.how{border:1.5px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;gap:14px;background:var(--soft)}
+.how ol{margin:0;padding-left:20px;line-height:1.8}
+.how .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.how input{font-family:var(--display);font-size:20px;width:6ch;padding:6px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media (max-width:900px){.intro{grid-template-columns:1fr}@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head><body>
+<div class="app">
+  <header>
+    <h1 class="title">Activity 2: Policy Survivor <b>รู้จริง ต้องรอด!</b></h1>
+    <span class="spacer"></span>
+    <div class="surv" title="จำนวนผู้เล่นที่ยังรอด">
+      <span class="label">ผู้รอด</span>
+      <button type="button" id="sMinus" aria-label="ลดผู้รอด">−</button>
+      <input class="n" id="sN" inputmode="numeric" aria-label="จำนวนผู้รอด">
+      <button type="button" id="sPlus" aria-label="เพิ่มผู้รอด">+</button>
+    </div>
+    <button type="button" id="btnSound">🔊 เสียงเปิด</button>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+const QS = [{"n": 1, "q": "เมื่อไม่แน่ใจว่าการกระทำใดถูกต้องตามจรรยาบรรณ ควรปรึกษาผู้บังคับบัญชาหรือผู้รับผิดชอบก่อนหรือไม่?", "ex": true, "ok": true, "a": "จริง / ควรปรึกษาก่อน", "why": "ควรปรึกษาผู้บังคับบัญชาหรือผู้รับผิดชอบก่อนดำเนินการ", "ref": "นโยบายจรรยาบรรณในการดำเนินธุรกิจ", "y": "จริง", "no": "ไม่จริง"}, {"n": 2, "q": "การเปิดใช้งาน Multi-Factor Authentication (MFA) กับบัญชีผู้ใช้ของบริษัท เป็นแนวทางที่ช่วยเพิ่มความปลอดภัยหรือไม่?", "ex": true, "ok": true, "a": "จริง", "why": "MFA เป็นแนวทางที่ช่วยเพิ่มความปลอดภัยให้บัญชีผู้ใช้", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "จริง", "no": "ไม่จริง"}, {"n": 3, "q": "พนักงานพบเห็นเพื่อนร่วมงานอาจฝ่าฝืนนโยบายบริษัท แต่ไม่แจ้งใครเพราะคิดว่าไม่เกี่ยวกับตนเอง ถือเป็นสิ่งที่ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "พนักงานมีหน้าที่รายงานการกระทำที่อาจฝ่าฝืนนโยบายหรือจรรยาบรรณของบริษัท", "ref": "นโยบายจรรยาบรรณในการดำเนินธุรกิจ", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 4, "q": "พนักงานได้รับการร้องขอให้ช่วยสอบสวนข้อเท็จจริงของบริษัท และให้ความร่วมมือ ถือเป็นแนวทางที่ถูกต้องหรือไม่?", "ex": false, "ok": true, "a": "จริง / ทำได้", "why": "การให้ความร่วมมือในการสอบสวนข้อเท็จจริงเป็นหน้าที่ของพนักงาน", "ref": "นโยบายจรรยาบรรณในการดำเนินธุรกิจ", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 5, "q": "พนักงานทราบผลประกอบการก่อนประกาศต่อสาธารณะและซื้อหุ้นเพื่อทำกำไร ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ห้ามใช้ข้อมูลภายในเพื่อแสวงหาประโยชน์ส่วนตน", "ref": "นโยบายการใช้ข้อมูลภายใน", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 6, "q": "พนักงานอยู่ใน Insider List และบอกเพื่อนให้ซื้อหุ้นโดยไม่อธิบายเหตุผล เพราะรู้ข้อมูลที่ยังไม่เปิดเผย ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "เป็นการชี้นำให้ผู้อื่นใช้ข้อมูลภายในในการตัดสินใจลงทุน", "ref": "นโยบายการใช้ข้อมูลภายใน", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 7, "q": "เมื่อมีผู้ถามถึงรายละเอียดโครงการซื้อกิจการที่ยังเป็นความลับ พนักงานปฏิเสธที่จะให้ข้อมูล ถือว่าทำได้หรือไม่?", "ex": false, "ok": true, "a": "จริง / ทำได้", "why": "ต้องรักษาความลับของข้อมูลภายใน", "ref": "นโยบายการใช้ข้อมูลภายใน", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 8, "q": "พนักงานบอกญาติให้ซื้อหุ้นแทนตนเองก่อนบริษัทประกาศข่าวสำคัญ ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "เป็นการใช้ข้อมูลภายในเพื่อประโยชน์ของบุคคลอื่น", "ref": "นโยบายการใช้ข้อมูลภายใน", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 9, "q": "คู่ค้ามอบสมุดบันทึกและร่มที่มีโลโก้บริษัท มูลค่ารวมประมาณ 800 บาทในช่วงปีใหม่ พนักงานรับได้หรือไม่?", "ex": false, "ok": true, "a": "ทำได้ หากเป็นไปตามหลักเกณฑ์", "why": "ต้องปฏิบัติตามหลักเกณฑ์และรายงานตามขั้นตอนที่กำหนด", "ref": "นโยบายการให้และการรับของขวัญ ของกำนัล และการเลี้ยงรับรอง", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 10, "q": "พนักงานได้รับเช็คของขวัญจากคู่ค้าและเก็บไว้ใช้เอง ถือว่าทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "เช็คเป็นสิ่งที่มีลักษณะเทียบเท่าเงินสด", "ref": "นโยบายการให้และการรับของขวัญ ของกำนัล และการเลี้ยงรับรอง", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 11, "q": "คู่ค้าเชิญพนักงานไปเลี้ยงรับรองในสถานเริงรมย์หรูหราเพื่อฉลองปิดโครงการ พนักงานควรรับคำเชิญหรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ไม่ควรรับ", "why": "อาจก่อให้เกิดความขัดแย้งทางผลประโยชน์และไม่เหมาะสม", "ref": "นโยบายการให้และการรับของขวัญ ของกำนัล และการเลี้ยงรับรอง", "y": "จริง", "no": "ไม่จริง"}, {"n": 12, "q": "พนักงานได้รับของขวัญตามเทศกาลและแจ้งหัวหน้างานพร้อมบันทึกใน Gift System ถือว่าทำถูกต้องหรือไม่?", "ex": false, "ok": true, "a": "จริง / ทำได้", "why": "เป็นขั้นตอนที่ถูกต้องตามนโยบาย", "ref": "นโยบายการให้และการรับของขวัญ ของกำนัล และการเลี้ยงรับรอง", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 13, "q": "พนักงานได้รับกระเช้าของขวัญจากคู่ค้าแล้วนำกลับบ้านทันทีโดยไม่แจ้งหรือบันทึก ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ต้องรายงานและบันทึกรายการตามขั้นตอนของบริษัท", "ref": "นโยบายการให้และการรับของขวัญ ของกำนัล และการเลี้ยงรับรอง", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 14, "q": "ผู้แจ้งเบาะแสไม่เปิดเผยชื่อ แต่ให้ข้อมูลและหลักฐานสนับสนุนครบถ้วน สามารถแจ้งเบาะแสได้หรือไม่?", "ex": false, "ok": true, "a": "จริง / ทำได้", "why": "สามารถแจ้งแบบไม่เปิดเผยตัวตนได้ หากมีข้อมูลเพียงพอ", "ref": "นโยบายการแจ้งเบาะแสหรือข้อร้องเรียน (Whistleblowing)", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 15, "q": "พนักงานส่งข้อร้องเรียนว่า “มีคนโกงแน่นอน” โดยไม่มีรายละเอียดหรือหลักฐาน เพียงพอสำหรับการตรวจสอบหรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ยังไม่เพียงพอ", "why": "ควรมีรายละเอียดหรือหลักฐานสนับสนุนเพื่อให้ตรวจสอบได้", "ref": "นโยบายการแจ้งเบาะแสหรือข้อร้องเรียน (Whistleblowing)", "y": "จริง", "no": "ไม่จริง"}, {"n": 16, "q": "บริษัทควรเก็บข้อมูลผู้แจ้งเบาะแสเป็นความลับและจำกัดผู้เข้าถึงเฉพาะผู้เกี่ยวข้องหรือไม่?", "ex": false, "ok": true, "a": "จริง", "why": "ข้อมูลผู้แจ้งเบาะแสต้องเก็บเป็นความลับและจำกัดผู้เข้าถึง", "ref": "นโยบายการแจ้งเบาะแสหรือข้อร้องเรียน (Whistleblowing)", "y": "จริง", "no": "ไม่จริง"}, {"n": 17, "q": "พนักงานสามารถแจ้งเรื่องเท็จเพื่อกลั่นแกล้งเพื่อนร่วมงานและยังได้รับความคุ้มครองตามนโยบายได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง", "why": "นโยบายไม่ได้ให้สิทธิแจ้งเรื่องเท็จเพื่อกลั่นแกล้งผู้อื่น", "ref": "นโยบายการแจ้งเบาะแสหรือข้อร้องเรียน (Whistleblowing)", "y": "จริง", "no": "ไม่จริง"}, {"n": 18, "q": "พนักงานได้รับเรื่องร้องเรียนจากระบบ Whistleblowing แล้วนำไปเล่าให้เพื่อนร่วมงานฟังเพราะเห็นว่าน่าสนใจ ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ข้อมูลร้องเรียนต้องเก็บเป็นความลับ", "ref": "นโยบายการแจ้งเบาะแสหรือข้อร้องเรียน (Whistleblowing)", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 19, "q": "การจดรหัสผ่านไว้บนกระดาษแล้วแปะไว้หน้าจอคอมพิวเตอร์ แม้รหัสผ่านจะซับซ้อน ถือว่าปลอดภัยหรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "มีความเสี่ยงต่อการเปิดเผยข้อมูลการเข้าสู่ระบบ", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 20, "q": "พนักงานบอกรหัสผ่านให้เพื่อนร่วมงานช่วยจำ ทำได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ห้ามเปิดเผยรหัสผ่านแก่ผู้อื่น", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 21, "q": "เมื่อโน้ตบุ๊กของบริษัทสูญหาย พนักงานควรรีบแจ้งฝ่าย HR และ IT ทันทีหรือไม่?", "ex": false, "ok": true, "a": "จริง / ควรแจ้งทันที", "why": "ควรแจ้งทันทีเมื่อทราบเหตุ", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "จริง", "no": "ไม่จริง"}, {"n": 22, "q": "เมื่อได้รับอีเมลที่มีลิงก์แปลก ๆ ควรกดเปิดทันทีโดยไม่ตรวจสอบผู้ส่งหรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ไม่ควรทำ", "why": "อาจเป็นการโจมตีแบบ Phishing", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "จริง", "no": "ไม่จริง"}, {"n": 23, "q": "หากสงสัยว่าตนเองอาจกดลิงก์ Phishing จากอีเมลปลอม ควรแจ้งฝ่าย IT ทันทีหรือไม่?", "ex": false, "ok": true, "a": "จริง / ควรแจ้งทันที", "why": "เป็นแนวปฏิบัติที่เหมาะสมเมื่อสงสัยว่าเกิดเหตุ", "ref": "นโยบายความปลอดภัยด้านเทคโนโลยีสารสนเทศ", "y": "จริง", "no": "ไม่จริง"}, {"n": 24, "q": "พนักงานสามารถนำข้อมูลลับทั้งหมดของบริษัทไปใส่ AI ภายนอกเพื่อวิเคราะห์งานได้ทันทีหรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ต้องตรวจสอบประเภทและระดับความลับของข้อมูลก่อนใช้งาน AI", "ref": "นโยบายและกรอบการกำกับดูแลการใช้งานปัญญาประดิษฐ์ (AI Governance)", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 25, "q": "ก่อนใช้งาน AI พนักงานควรตรวจสอบระดับความลับของข้อมูลทุกครั้งหรือไม่?", "ex": false, "ok": true, "a": "จริง / ควรทำ", "why": "เป็นแนวทางที่ถูกต้องตามนโยบาย AI Governance", "ref": "นโยบายและกรอบการกำกับดูแลการใช้งานปัญญาประดิษฐ์ (AI Governance)", "y": "จริง", "no": "ไม่จริง"}, {"n": 26, "q": "AI สร้างรายงานให้แล้ว พนักงานสามารถส่งให้ลูกค้าทันทีโดยไม่ตรวจสอบได้หรือไม่?", "ex": false, "ok": false, "a": "ไม่จริง / ทำไม่ได้", "why": "ผลลัพธ์จาก AI ต้องผ่านการตรวจสอบก่อนนำไปใช้", "ref": "นโยบายและกรอบการกำกับดูแลการใช้งานปัญญาประดิษฐ์ (AI Governance)", "y": "ทำได้", "no": "ทำไม่ได้"}, {"n": 27, "q": "ผลลัพธ์จาก AI ควรได้รับการตรวจสอบความถูกต้อง ความครบถ้วน และความเหมาะสมก่อนใช้งานจริงเสมอ ใช่หรือไม่?", "ex": false, "ok": true, "a": "ใช่ / จริง", "why": "ควรตรวจสอบผลลัพธ์ AI ก่อนนำไปใช้งานจริงเสมอ", "ref": "นโยบายและกรอบการกำกับดูแลการใช้งานปัญญาประดิษฐ์ (AI Governance)", "y": "ใช่", "no": "ไม่ใช่"}, {"n": 28, "q": "จริงหรือไม่: วัตถุประสงค์ของนโยบายการใช้ข้อมูลภายในคือป้องกันการนำข้อมูลภายในไปแสวงหาประโยชน์โดยมิชอบ", "ex": false, "ok": true, "a": "จริง", "why": "นโยบายมีวัตถุประสงค์เพื่อป้องกันการใช้ข้อมูลภายในแสวงหาประโยชน์โดยมิชอบ", "ref": "นโยบายการใช้ข้อมูลภายใน", "y": "จริง", "no": "ไม่จริง"}, {"n": 29, "q": "จริงหรือไม่: ชิงช้าสวรรค์ถูกคิดค้นขึ้นในประเทศไทย", "ex": false, "ok": false, "a": "ไม่จริง", "why": "ชิงช้าสวรรค์ถูกคิดค้นขึ้นในประเทศสหรัฐอเมริกา ก่อนแพร่หลายไปทั่วโลก", "ref": "คำถามความรู้ทั่วไป: งานวัด วิถีไทย และเรื่องลี้ลับ", "y": "จริง", "no": "ไม่จริง"}, {"n": 30, "q": "จริงหรือไม่: วัดพระแก้วมีพระสงฆ์จำพรรษาอยู่ภายในวัดเหมือนวัดทั่วไป", "ex": false, "ok": false, "a": "ไม่จริง", "why": "ตามเอกสาร วัดพระแก้วเป็นพระอารามพิเศษ ไม่มีพระสงฆ์จำพรรษาอยู่ภายใน", "ref": "คำถามความรู้ทั่วไป: งานวัด วิถีไทย และเรื่องลี้ลับ", "y": "จริง", "no": "ไม่จริง"}];
+const KEY='policy-survivor-v1';
+let S = load() || {i:-1,survivors:50,secs:15,seen:[],sound:true};
+function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const $=s=>document.querySelector(s), main=$('#main');
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fitBox(box){ if(!box) return; let k=1; box.style.setProperty('--k',k); let n=0; while(box.scrollHeight>box.clientHeight+1 && k>0.34 && n++<40){ k-=0.03; box.style.setProperty('--k',k.toFixed(2)); } }
+const pg=n=>{const e=$('#pg'); if(e) e.textContent=n;};
+
+let AC=null;
+function beep(f=880,d=.12,type='sine',v=.25){ if(!S.sound) return; try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){} }
+function paintSound(){ $('#btnSound').textContent=S.sound?'🔊 เสียงเปิด':'🔇 เสียงปิด'; }
+$('#btnSound').onclick=()=>{S.sound=!S.sound;save();paintSound();};
+paintSound();
+
+const sN=$('#sN');
+function paintSurv(){ sN.value=S.survivors; }
+$('#sMinus').onclick=()=>{S.survivors=Math.max(0,S.survivors-1);save();paintSurv();};
+$('#sPlus').onclick=()=>{S.survivors++;save();paintSurv();};
+sN.oninput=()=>{const v=parseInt(sN.value,10); if(!isNaN(v)&&v>=0){S.survivors=v;save();}};
+paintSurv();
+
+function renderIntro(){
+  stopTimer(); pg('');
+  main.innerHTML=`
+  <div class="intro">
+    <div>
+      <h2>Policy Survivor<span>รู้จริง ต้องรอด!</span></h2>
+      <p>ทุกคนยืนขึ้น อ่านคำถามบนจอแล้วเลือกฝั่ง <span class="chip yes">ทำได้ / จริง</span> หรือ <span class="chip no">ทำไม่ได้ / ไม่จริง</span> ตามตัวเลือกของแต่ละข้อ ภายในเวลาที่กำหนด ใครตอบผิดนั่งลง คนที่ยังยืนอยู่จนข้อสุดท้ายคือผู้รอดชีวิต</p>
+    </div>
+    <div class="how">
+      <ol>
+        <li>ข้อ 1–2 เป็นข้อตัวอย่างสำหรับซ้อม ยังไม่คัดออก</li>
+        <li>กด <kbd>Space</kbd> เริ่มจับเวลา หมดเวลาแล้วกด <kbd>R</kbd> เฉลย</li>
+        <li>ปรับจำนวนผู้รอดที่มุมขวาบนหลังเฉลยแต่ละข้อ</li>
+        <li><kbd>→</kbd> ข้อต่อไป · <kbd>←</kbd> ย้อนกลับ</li>
+      </ol>
+      <div class="row"><span class="label">ผู้เล่นเริ่มต้น</span><input id="startN" inputmode="numeric" value="${S.survivors}"></div>
+      <div class="row"><span class="label">เวลาต่อข้อ</span>
+        <div class="seg">${[10,15,20,30].map(s=>`<button type="button" data-s="${s}" class="${S.secs===s?'on':''}">${s} วิ</button>`).join('')}</div></div>
+      <div class="row">
+        <button type="button" class="primary big" id="go">${S.i>=0?'เล่นต่อข้อ '+QS[S.i].n:'เริ่มเกม ▶'}</button>
+        ${S.i>=0?`<button type="button" id="restart">เริ่มใหม่ตั้งแต่ข้อ 1</button>`:''}
+      </div>
+    </div>
+  </div>`;
+  $('#startN').oninput=e=>{const v=parseInt(e.target.value,10); if(!isNaN(v)&&v>=0){S.survivors=v;save();paintSurv();}};
+  main.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{S.secs=+b.dataset.s;save();renderIntro();});
+  $('#go').onclick=()=>go(Math.max(0,S.i));
+  if($('#restart')) $('#restart').onclick=()=>{S.seen=[];go(0);};
+}
+
+let left=0,tm=null,revealed=false;
+function stopTimer(){clearInterval(tm);tm=null;}
+function go(i){ stopTimer(); S.i=Math.max(0,Math.min(QS.length-1,i)); save(); revealed=false; left=S.secs; renderQ(); }
+function startTimer(){
+  if(tm||revealed) return; if(left<=0) left=S.secs;
+  beep(880,.2);
+  tm=setInterval(()=>{ left--; if(left<=5&&left>0) beep(1200,.05,'square',.12); if(left<=0){stopTimer();beep(220,.6,'sawtooth',.3);} paintClock(); },1000);
+  paintClock();
+}
+function paintClock(){
+  const c=$('#clock'),b=$('#barI'); if(!c) return;
+  c.textContent=left; c.classList.toggle('warn',left<=5);
+  b.style.width=(left/S.secs*100)+'%'; b.style.background=left<=5?'var(--stop)':'var(--cyan)';
+  const tb=$('#timerBtn'); if(tb) tb.textContent= tm?'❚❚ หยุดเวลา':(left===S.secs?'▶ เริ่มจับเวลา':'▶ เริ่มนับใหม่');
+}
+function reveal(){
+  if(revealed) return; stopTimer(); revealed=true;
+  if(!S.seen.includes(S.i)) S.seen.push(S.i); save();
+  beep(660,.12); setTimeout(()=>beep(990,.25),110);
+  renderQ();
+}
+function renderQ(){
+  const q=QS[S.i], exNo=QS.slice(0,S.i+1).filter(x=>x.ex).length;
+  pg(q.n);
+  main.innerHTML=`
+    <div class="qhead">
+      <div class="qno">ข้อ ${q.n}<small> / ${QS.length}</small></div>
+      ${q.ex?`<span class="tag">ตัวอย่าง ${exNo} · ซ้อม ยังไม่คัดออก</span>`:''}
+      <span class="spacer"></span>
+      <div class="clock" id="clock">${left}</div>
+    </div>
+    <div class="bar"><i id="barI" style="width:100%"></i></div>
+    <div class="stage">
+    ${revealed?`
+      <div class="reveal">
+        <div class="a">เฉลย: <span class="${q.ok?'yes':'no'}">${q.ok?'✅':'❌'} ${esc(q.a)}</span></div>
+        <div class="why">${esc(q.why)}</div>
+        <div class="ref">อ้างอิง: <b>${esc(q.ref)}</b></div>
+        <div class="q">คำถาม: ${esc(q.q)}</div>
+      </div>`:`
+      <p class="question">${esc(q.q)}</p>
+      <div class="answers"><div class="yes">${esc(q.y)}</div><div class="no">${esc(q.no)}</div></div>`}
+    </div>
+    <div class="controls">
+      <button type="button" id="prev" ${S.i===0?'disabled':''}>← ก่อนหน้า</button>
+      <button type="button" class="big" id="timerBtn" ${revealed?'disabled':''}>▶ เริ่มจับเวลา</button>
+      <button type="button" class="big primary" id="revBtn" ${revealed?'disabled':''}>เฉลย</button>
+      <button type="button" class="big" id="next" ${S.i===QS.length-1?'disabled':''}>ข้อต่อไป →</button>
+      <span class="spacer"></span>
+      <span class="kbd"><kbd>Space</kbd> จับเวลา · <kbd>R</kbd> เฉลย · <kbd>→</kbd> ต่อไป · <kbd>←</kbd> ย้อน</span>
+      <button type="button" id="menu">เมนู</button>
+    </div>`;
+  paintClock(); fitBox($('.stage'));
+  $('#prev').onclick=()=>go(S.i-1);
+  $('#next').onclick=()=>go(S.i+1);
+  $('#timerBtn').onclick=()=>tm?(stopTimer(),paintClock()):startTimer();
+  $('#revBtn').onclick=reveal;
+  $('#menu').onclick=renderIntro;
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||!$('#revBtn')) return;
+  if(e.key===' '){e.preventDefault(); if(!revealed) (tm?(stopTimer(),paintClock()):startTimer());}
+  else if(e.key==='r'||e.key==='R'||e.key==='พ'){e.preventDefault();reveal();}
+  else if(e.key==='ArrowRight'){e.preventDefault(); if(S.i<QS.length-1) go(S.i+1);}
+  else if(e.key==='ArrowLeft'){e.preventDefault(); if(S.i>0) go(S.i-1);}
+});
+window.addEventListener('resize',()=>fitBox($('.stage')));
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>fitBox($('.stage')));
+renderIntro();
+</script>
+
+</body></html>
