@@ -37,7 +37,7 @@ button:disabled{opacity:.35;cursor:not-allowed}
 main{flex:1;min-height:0;display:flex;flex-direction:column}
 .screen{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
 .label{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600}
-.home{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;flex:1;min-height:0}
+.home{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;flex:1;min-height:0;overflow:auto}
 .teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
 .team{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;cursor:pointer}
 .team.sel{border-color:var(--ink);box-shadow:0 0 0 3px rgba(0,165,219,.25)}
@@ -102,6 +102,16 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;paddi
 .rcard.ok .st{color:var(--go)}.rcard:not(.ok) .st{color:var(--stop)}
 .rcard .h{color:var(--muted);font-size:13px;line-height:1.5}
 .bigscore{font-family:var(--display);font-weight:700;font-size:clamp(46px,6.6vw,90px);line-height:1}
+.rounds{display:flex;gap:8px;flex-wrap:wrap}
+.rounds button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 18px;font-size:18px}
+.rounds button small{font-size:13px;font-weight:500;color:var(--muted)}
+.rounds button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.rounds button.on small{color:#C9D0F0}
+.winner{font-family:var(--display);font-weight:700;font-size:clamp(22px,2.6vw,34px);background:var(--hl);border-radius:12px;padding:10px 18px}
+.winner small{font-family:var(--body);font-size:.55em;font-weight:500;color:var(--muted);margin-left:8px}
+.team.out{opacity:.45;cursor:default}
+.team .fin{grid-column:1 / -1;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;margin-top:4px}
+.team .fin input{width:18px;height:18px;accent-color:var(--ink)}
 .confirm{border:1.5px solid var(--stop);border-radius:10px;padding:8px 12px;background:var(--bg)}
 @media (max-width:900px){.home{grid-template-columns:1fr}.res{grid-template-columns:repeat(2,minmax(0,1fr))}.teams{grid-template-columns:1fr}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -109,7 +119,7 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;paddi
 </head><body>
 <div class="app">
   <header>
-    <div><h1 class="title">Activity 1: <b>Crack the Code</b></h1><div class="sub">เรียงตัวอักษรให้เป็นคำ · 6 ทีม · ทีมละ 60 วินาที · ชุดละ 5 คำ</div></div>
+    <div><h1 class="title">Activity 1: <b>Crack the Code</b></h1><div class="sub">เรียงตัวอักษรให้เป็นคำ · 6 ทีม · ชุดละ 5 คำ · รอบที่ 1 ทีมละ 60 วินาที · รอบชิง 30 วินาที</div></div>
     <div class="row">
       <button id="btnSound" type="button">🔊 เสียงเปิด</button>
       <button id="btnHome" type="button" hidden>← ตารางคะแนน</button>
@@ -120,12 +130,12 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;paddi
 
 <script>
 const SETS = [[{"t": ["เ", "น", "น", "วุ้", "ส้"], "a": "วุ้นเส้น", "h": ""}, {"t": ["ล", "น", "ง", "ทุ"], "a": "ลงทุน", "h": "การนำเงินหรือทรัพย์สินไปแสวงหาผลตอบแทนในอนาคต"}, {"t": ["ภั", "ค", "ว", "า", "ม", "ด", "ป", "ล", "อ", "ย"], "a": "ความปลอดภัย", "h": "สภาวะที่ปราศจากภัยหรือความเสี่ยงที่อาจก่อให้เกิดความเสียหาย"}, {"t": ["สั", "ป", "ติ", "ย", "ร", "วิ", "ก"], "a": "ปรกติวิสัย", "h": "เกณฑ์มูลค่าความเหมาะสมตามธรรมเนียมปฏิบัติทางการค้า (เพดานไม่เกิน 3,000 บาท)"}, {"t": ["ง", "ใ", "โ", "ร่", "ส", "ป"], "a": "โปร่งใส", "h": "เปิดเผย ตรวจสอบได้"}], [{"t": ["ส", "ร", "า", "ธ", "ะ", "ณ", "า"], "a": "สาธารณะ", "h": "บุคคลทั่วไปหรือประชาชนสามารถเข้าถึงได้"}, {"t": ["ธิ์", "ลิ", "ข", "สิ", "ท"], "a": "ลิขสิทธิ์", "h": "สิทธิของเจ้าของผลงานในการควบคุมการใช้ ทำซ้ำ หรือเผยแพร่ผลงาน"}, {"t": ["เ", "อ", "น", "ตื", "แ", "ง", "จ้"], "a": "แจ้งเตือน", "h": "การแจ้งให้ทราบหรือรายงานเหตุการณ์ ความเสี่ยง หรือการกระทำที่อาจไม่เหมาะสม"}, {"t": ["ตี๋", "เ", "ย", "ว", "ก๋", "ย", "ว"], "a": "ก๋วยเตี๋ยว", "h": ""}, {"t": ["ล้", "แ", "ก", "น", "ลั่", "ง", "ก"], "a": "กลั่นแกล้ง", "h": "พฤติกรรมรังแกหรือสร้างความเดือดร้อนให้ผู้อื่นด้วยเจตนาร้าย"}], [{"t": ["ชี", "มื", "อ", "า", "พ", "อ"], "a": "มืออาชีพ", "h": "ทำงานได้มาตรฐาน"}, {"t": ["บ", "อ", "ส", "จ", "ร", "ว", "ต"], "a": "ตรวจสอบ", "h": "การพิจารณาหรือทบทวนข้อมูลเพื่อยืนยันความถูกต้อง"}, {"t": ["รุ่", "สุ", "ย", "า", "ร่", "สุ", "ย"], "a": "สุรุ่ยสุร่าย", "h": "ลักษณะการใช้จ่ายหรือจัดเลี้ยงที่ฟุ่มเฟือยเกินขอบเขตความจำเป็นทางธุรกิจ"}, {"t": ["ห", "า", "ร", "า", "อ"], "a": "อาหาร", "h": ""}, {"t": ["ณ์", "อุ", "ป", "ก", "ร"], "a": "อุปกรณ์", "h": "เครื่องมือหรือเครื่องคอมพิวเตอร์ที่ใช้สนับสนุนการทำงาน"}], [{"t": ["นั", "วิ", "ย"], "a": "วินัย", "h": "ทำตามกฎ"}, {"t": ["ต", "จ", "ริ", "สุ"], "a": "สุจริต", "h": "ไม่ทุจริต"}, {"t": ["เ", "ห", "น", "ส้", "มี่"], "a": "เส้นหมี่", "h": ""}, {"t": ["ใ", "ห้", "A", "I", "จั", "ด", "ห", "า", "ที่", "บ", "ริ", "ษั", "ท"], "a": "AI ที่บริษัทจัดหาให้", "h": "เครื่องมือปัญญาประดิษฐ์ที่องค์กรจัดหาและอนุญาตให้พนักงานใช้งาน"}, {"t": ["ม", "ลั", "ว", "บ", "า", "ค"], "a": "ความลับ", "h": "ชั้นความปลอดภัยสูงสุดในการคุ้มครองข้อมูลและตัวตนของผู้แจ้ง"}], [{"t": ["ถึ", "ง", "สิ", "ท", "ธิ", "ก", "า", "ร", "เ", "ข้", "า"], "a": "สิทธิการเข้าถึง", "h": "ขอบเขตที่กำหนดว่าผู้ใช้สามารถดูหรือดำเนินการกับระบบและข้อมูลใดได้บ้าง"}, {"t": ["ร", "ง", "า", "โ", "ง", "า", "น"], "a": "โรงงาน", "h": ""}, {"t": ["ร", "ณ", "จ", "า", "บ", "ร", "ย", "ร", "ร"], "a": "จรรยาบรรณ", "h": "ประมวลความประพฤติและมาตรฐานทางจริยธรรมในการดำเนินธุรกิจ"}, {"t": ["มั่", "ชื่", "อ", "เ", "น"], "a": "เชื่อมั่น", "h": "น่าไว้วางใจ"}, {"t": ["เ", "ย", "ปิ", "ผ", "เ", "ด"], "a": "เปิดเผย", "h": "การแจ้งหรือเผยแพร่ข้อมูลให้ผู้อื่นรับทราบ"}], [{"t": ["ผ", "ย", "โ", "ช", "น์", "ล", "ระ", "ป"], "a": "ผลประโยชน์", "h": "สิ่งตอบแทนที่ต้องจัดการอย่างเป็นธรรม"}, {"t": ["ส", "แ", "า", "ะ", "จ้", "บ", "แ", "เ", "ง"], "a": "แจ้งเบาะแส", "h": "การชี้เบาะแสหรือรายงานพฤติกรรมมิชอบให้บริษัทฯ ทราบ"}, {"t": ["ง", "แ", "ป้"], "a": "แป้ง", "h": ""}, {"t": ["L", "o", "o", "p", "-", "H", "u", "m", "a", "n", "-", "i", "n", "-", "t", "h", "e"], "a": "Human-in-the-Loop", "h": "หลักการที่ให้มนุษย์มีส่วนกำกับ ตรวจสอบ และรับผิดชอบผลลัพธ์จาก AI"}, {"t": ["ร", "อ", "เ", "ลี้", "ง", "ย", "รั", "ง", "บ"], "a": "เลี้ยงรับรอง", "h": "การจัดเลี้ยงอาหาร เครื่องดื่ม หรือสันทนาการทางธุรกิจที่ต้องสมเหตุสมผล"}], [{"t": ["ส", "ม", "า", "ะ", "เ", "ห", "ม"], "a": "เหมาะสม", "h": "ถูกกาลเทศะ"}, {"t": ["เ", "ก", "ร", "ก", "ษ", "ต", "ร"], "a": "เกษตรกร", "h": ""}, {"t": ["ผ่", "า", "น", "ร", "หั", "ส"], "a": "รหัสผ่าน", "h": "ชุดอักขระลับที่ใช้ร่วมกับชื่อผู้ใช้เพื่อเข้าสู่ระบบ"}, {"t": ["ดี", "เ", "ค", "น", "ดำ", "นิ"], "a": "ดำเนินคดี", "h": "การบังคับใช้กระบวนการทางกฎหมายต่อผู้กระทำความผิด"}, {"t": ["ริ", "า", "จ", "ทุ", "ร", "ก", "ต"], "a": "การทุจริต", "h": "การกระทำความผิดเพื่อแสวงหาประโยชน์อันมิควรได้ เช่น โกง ยักยอก"}], [{"t": ["บ", "ต", "วั", "ดิ", "ถุ"], "a": "วัตถุดิบ", "h": ""}, {"t": ["เ", "ง", "น", "ด", "ว้"], "a": "งดเว้น", "h": "การหลีกเลี่ยงหรือไม่กระทำการใด ๆ ตามที่กำหนด"}, {"t": ["ริ", "เ", "ข้", "จ", "อ", "ง", "ท็", "จ"], "a": "ข้อเท็จจริง", "h": "เรื่องราวหรือสาระสำคัญที่เกิดขึ้นจริงโดยไม่บิดเบือน"}, {"t": ["ชิ", "ง", "ฟิ", "ช"], "a": "ฟิชชิง", "h": "การหลอกลวงผ่านอีเมลหรือข้อความเพื่อขโมยข้อมูลสำคัญ"}, {"t": ["จู", "ใ", "แ", "ง", "ร", "จ", "ง"], "a": "แรงจูงใจ", "h": "สิ่งกระตุ้นหรือข้อแลกเปลี่ยนที่ทำให้เบี่ยงเบนการตัดสินใจจากการปฏิบัติหน้าที่ที่ถูกต้อง"}], [{"t": ["น", "ฐ", "ลั", "า", "ห", "ก"], "a": "หลักฐาน", "h": "เอกสาร ข้อมูล หรือสิ่งยืนยันความจริงของการกระทำผิด"}, {"t": ["ห", "ก", "รั", "ลั", "ท", "พ", "ย์"], "a": "หลักทรัพย์", "h": "หุ้น พันธบัตร หรือสินทรัพย์ทางการเงินที่สามารถซื้อขายได้"}, {"t": ["ไ", "ย", "ว", "ท", "า"], "a": "ไทยวา", "h": ""}, {"t": ["ต", "อั", "ป", "เ", "ด"], "a": "อัปเดต", "h": "การปรับซอฟต์แวร์ให้เป็นรุ่นใหม่เพื่อเพิ่มความปลอดภัยและเสถียรภาพ"}, {"t": ["แ", "ย้", "ด", "ขั", "ง"], "a": "ขัดแย้ง", "h": "สภาวะที่ประโยชน์ส่วนตนและหน้าที่การงานไม่สอดคล้องกันหรือสวนทางกัน"}], [{"t": ["นุ", "ติ", "า", "จ", "อำ", "มั", "อ", "น"], "a": "อำนาจอนุมัติ", "h": "สิทธิและขอบเขตอำนาจของระดับผู้บริหารในการลงนามอนุมัติค่าใช้จ่ายตามระเบียบบริษัทฯ"}, {"t": ["อ", "า", "ย", "ซื้", "ข"], "a": "ซื้อขาย", "h": "การทำธุรกรรมซื้อหรือขายหลักทรัพย์หรือสินทรัพย์ทางการเงิน"}, {"t": ["ต้า", "น", "ต่", "อ"], "a": "ต่อต้าน", "h": "การคัดค้านหรือป้องกันไม่ให้เกิดสิ่งไม่พึงประสงค์"}, {"t": ["ภิ", "บ", "า", "ล", "ธ", "ร", "ร", "ม", "า"], "a": "ธรรมาภิบาล", "h": "หลักการกำกับดูแลกิจการที่ดี"}, {"t": ["ก", "ลู", "ค้", "า"], "a": "ลูกค้า", "h": ""}], [{"t": ["ภ", "พ", "คุ", "ณ", "า"], "a": "คุณภาพ", "h": ""}, {"t": ["A", "F", "M"], "a": "MFA", "h": "การยืนยันตัวตนมากกว่าหนึ่งวิธีก่อนเข้าใช้งานระบบ"}, {"t": ["ถู", "ก", "ต้", "อ", "ง", "ค", "ว", "า", "ม"], "a": "ความถูกต้อง", "h": "คุณสมบัติของผลลัพธ์ที่ตรงกับข้อเท็จจริงและไม่มีข้อผิดพลาด"}, {"t": ["ก", "ะ", "เ", "ร", "บี", "บ", "ย", "ฎ"], "a": "กฎระเบียบ", "h": "ข้อบังคับที่ต้องปฏิบัติตาม"}, {"t": ["น", "ร้", "เ", "รี", "อ", "ย", "ข้", "ง", "อ"], "a": "ข้อร้องเรียน", "h": "ประเด็นเรื่องราวหรือข้อกล่าวหาที่ผู้พบเห็นส่งเข้ามาให้ตรวจสอบ"}], [{"t": ["ใ", "ช้", "ใ", "น", "ภ", "า", "ย"], "a": "ใช้ภายใน", "h": "ข้อมูลสำหรับการดำเนินงานภายในองค์กรที่ไม่ควรเปิดเผยโดยทั่วไป"}, {"t": ["ร", "า", "ก", "ต", "ลิ", "ผ"], "a": "การผลิต", "h": ""}, {"t": ["v", "i", "c", "e", "F", "r", "e", "s", "h", "s", "e", "r"], "a": "Freshservice", "h": "ระบบที่บริษัทฯ กำหนดให้ใช้แจ้งปัญหาและยื่นคำขอบริการด้านเทคโนโลยีสารสนเทศ"}, {"t": ["รั", "ค", "เ", "ด", "ร่", "ง", "คั"], "a": "เคร่งครัด", "h": "การปฏิบัติตามกฎหรือข้อกำหนดอย่างจริงจังและสม่ำเสมอ"}, {"t": ["ว", "บ", "ส", "น", "อ", "ส"], "a": "สอบสวน", "h": "ขั้นตอนการค้นหาความจริงและรวบรวมพยานหลักฐาน"}], [{"t": ["ย", "า", "น", "ใ", "ภ", "ล", "ข้", "มู", "อ", "ล"], "a": "ข้อมูลภายใน", "h": "ข้อมูลสำคัญของบริษัทที่ยังไม่ได้เปิดเผยต่อสาธารณะ และอาจมีผลต่อการตัดสินใจลงทุน"}, {"t": ["ม", "า", "ฎ", "ย", "ก", "ห"], "a": "กฎหมาย", "h": "ข้อบังคับของรัฐและระเบียบสากลที่ทุกคนต้องปฏิบัติตามเพื่อป้องกันการทุจริต"}, {"t": ["ลั", "บ", "ข้", "อ", "มู", "ล"], "a": "ข้อมูลลับ", "h": "ข้อมูลสำคัญสูงที่การเปิดเผยอาจสร้างความเสียหายแก่บริษัทฯ"}, {"t": ["ชั", "น", "แอ", "ป", "พ", "ลิ", "เ", "ค"], "a": "แอปพลิเคชัน", "h": "โปรแกรมที่ติดตั้งหรือใช้งานเพื่อช่วยปฏิบัติงาน"}, {"t": ["แ", "ดั", "ร", "ด", "ป้", "ง", "แ", "ร", "ป"], "a": "แป้งดัดแปร", "h": ""}], [{"t": ["นั", "ล", "ข", "กำ", "อ", "ง"], "a": "ของกำนัล", "h": "สิ่งของมีค่าหรือสินน้ำใจที่มอบให้แก่กัน นอกเหนือจากของขวัญทั่วไป"}, {"t": ["มู", "ล", "ระ", "ดั", "บ", "ข้", "อ"], "a": "ระดับข้อมูล", "h": "การแบ่งข้อมูลเป็นระดับ 1 สาธารณะ ระดับ 2 ใช้ภายใน และระดับ 3 ข้อมูลลับหรือข้อมูลสำคัญสูง"}, {"t": ["น", "ำ", "ห", "ะ", "ป", "ลั", "ส", "มั", "ง"], "a": "มันสำปะหลัง", "h": ""}, {"t": ["ห", "ว", "อ่", "ว", "น", "ไ"], "a": "อ่อนไหว", "h": "ลักษณะของข้อมูลที่ต้องควบคุมการเข้าถึงและใช้งานอย่างระมัดระวัง"}, {"t": ["ม", "เ", "ที", "เ", "ย", "ท่", "า"], "a": "เท่าเทียม", "h": "ไม่เลือกปฏิบัติ"}], [{"t": ["ต", "ซื่", "ย์", "สั", "อ"], "a": "ซื่อสัตย์", "h": "พูดและทำตามความจริง"}, {"t": ["ณี", "เ", "ป", "ะ", "พ", "ร"], "a": "ประเพณี", "h": "ขนบธรรมเนียมและแบบแผนทางสังคมที่มีมาแต่ดั้งเดิมในการมอบของขวัญตามเทศกาล"}, {"t": ["นิ", "ก", "ก", "อ", "ร์", "แ", "อ"], "a": "ออร์แกนิก", "h": ""}, {"t": ["พ", "ล", "า", "ด", "ข้", "อ", "ผิ", "ด"], "a": "ข้อผิดพลาด", "h": "สิ่งที่ไม่ถูกต้องหรือคลาดเคลื่อน ซึ่งต้องตรวจพบและแก้ไขก่อนนำผลลัพธ์ไปใช้งาน"}, {"t": ["ร", "ณ", "ะ", "A", "ธ", "า", "I", "ส", "า"], "a": "AI สาธารณะ", "h": "เครื่องมือปัญญาประดิษฐ์ภายนอกที่บุคคลทั่วไปสามารถเข้าใช้งานได้"}]];
-const TIME = 60;
+const TIMES = {1:60, 2:30};
 const N_TEAMS = 6;
-const KEY = 'crack-the-code-v1';
+const KEY = 'crack-the-code-v2';
 
 let S = load() || fresh();
-function fresh(){ return {teams:Array.from({length:N_TEAMS},(_,i)=>({name:'ทีม '+(i+1),score:null,time:null,set:null})),selTeam:0,selSet:null,used:[],sound:true}; }
+function fresh(){ return {round:1,teams:Array.from({length:N_TEAMS},(_,i)=>({name:'ทีม '+(i+1),r:[null,null],fin:false})),selTeam:0,selSet:null,used:[],sound:true}; }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 
@@ -145,62 +155,95 @@ paintSound();
 
 /* ---------- HOME ---------- */
 let resetArmed=false;
-function ranking(){
-  return S.teams.map((t,i)=>({...t,i})).filter(t=>t.score!==null)
-    .sort((a,b)=>b.score-a.score || a.time-b.time);
+const RN = ()=>S.round-1;                       // index into team.r
+const res = (t,k=RN())=>t.r[k];
+function eligible(i){ return S.round===1 || S.teams[i].fin; }
+function ranking(k=RN()){
+  return S.teams.map((t,i)=>({t,i,x:t.r[k]})).filter(o=>o.x && (k===0||o.t.fin))
+    .sort((a,b)=>b.x.score-a.x.score || a.x.time-b.x.time);
+}
+function autoFinalists(){
+  if(S.teams.some(t=>t.fin)) return;
+  ranking(0).slice(0,2).forEach(o=>S.teams[o.i].fin=true);
+}
+function setRound(n){
+  S.round=n; S.selSet=null;
+  if(n===2) autoFinalists();
+  const first=S.teams.findIndex((t,i)=>eligible(i)&&!res(t)); S.selTeam = first>=0?first:Math.max(0,S.teams.findIndex((t,i)=>eligible(i)));
+  save(); renderHome();
 }
 function renderHome(){
   $('#btnHome').hidden=true; pg('');
-  const rk = ranking(); const rankOf = {}; rk.forEach((t,k)=>rankOf[t.i]=k+1);
+  const k=RN(), sec=TIMES[S.round];
+  const rk = ranking(); const rankOf = {}; rk.forEach((o,n)=>rankOf[o.i]=n+1);
+  if(!eligible(S.selTeam)){ const f=S.teams.findIndex((t,i)=>eligible(i)); S.selTeam=f>=0?f:0; }
   const t = S.teams[S.selTeam];
+  const fins = S.teams.map((t,i)=>i).filter(eligible);
+  const allDone = S.round===2 && fins.length>0 && fins.every(i=>S.teams[i].r[1]);
+  let winner='';
+  if(allDone && rk.length){
+    const top=rk[0], tie=rk.filter(o=>o.x.score===top.x.score && o.x.time===top.x.time);
+    winner = tie.length>1 ? `<div class="winner">เสมอ: ${tie.map(o=>esc(o.t.name)).join(' · ')} <small>${top.x.score} คำ · ${top.x.time} วิ</small></div>`
+                          : `<div class="winner">🏆 ผู้ชนะ: ${esc(top.t.name)} <small>${top.x.score} คำ · ${top.x.time} วิ</small></div>`;
+  }
   main.innerHTML = `
-  <div class="screen"><div class="home">
+  <div class="screen">
+    <div class="rounds" role="tablist">
+      <button type="button" role="tab" class="${S.round===1?'on':''}" data-r="1">รอบที่ 1 <small>60 วินาที · ทุกทีม</small></button>
+      <button type="button" role="tab" class="${S.round===2?'on':''}" data-r="2">รอบชิงชนะเลิศ <small>30 วินาที · ทีมที่เข้ารอบ</small></button>
+    </div>
+    ${winner}
+    <div class="home">
     <section>
-      <div class="label" style="margin-bottom:8px">ตารางคะแนน · คลิกการ์ดเพื่อเลือกทีมที่จะเล่น · คลิกชื่อเพื่อแก้ไข</div>
-      <div class="teams">${S.teams.map((tm,i)=>`
-        <div class="team ${i===S.selTeam?'sel':''} ${tm.score!==null?'done':''}" data-i="${i}" role="button" tabindex="0">
+      <div class="label" style="margin-bottom:8px">${S.round===1?'ตารางคะแนนรอบที่ 1 · คลิกการ์ดเพื่อเลือกทีม · คลิกชื่อเพื่อแก้ไข':'ตารางคะแนนรอบชิง · ติ๊ก “เข้ารอบชิง” เพื่อเลือกทีมที่เข้ารอบ'}</div>
+      <div class="teams">${S.teams.map((tm,i)=>{ const x=tm.r[k], r1=tm.r[0], el=eligible(i); return `
+        <div class="team ${i===S.selTeam&&el?'sel':''} ${x?'done':''} ${el?'':'out'}" data-i="${i}" role="button" tabindex="0">
           <div class="rk">${rankOf[i]||'–'}</div>
           <input id="tn${i}" value="${esc(tm.name)}" aria-label="ชื่อทีม ${i+1}">
-          <div class="sc">${tm.score===null?'–':tm.score}</div>
-          <div class="meta">${tm.score===null?'ยังไม่ได้เล่น':`ชุดที่ ${tm.set} · ใช้เวลา ${tm.time} วิ`}</div>
-        </div>`).join('')}
+          <div class="sc">${x?x.score:'–'}</div>
+          <div class="meta">${x?`ชุดที่ ${x.set} · ใช้เวลา ${x.time} วิ`:(el?'ยังไม่ได้เล่น':'ไม่ได้เข้ารอบ')}${S.round===2?` · รอบ 1: ${r1?r1.score+' คำ':'–'}`:''}</div>
+          ${S.round===2?`<label class="fin"><input type="checkbox" id="fin${i}" data-f="${i}" ${tm.fin?'checked':''}> เข้ารอบชิง</label>`:''}
+        </div>`}).join('')}
       </div>
-      <p class="kbd" style="text-align:left;margin-top:10px">อันดับเรียงตามจำนวนคำที่ถูก ถ้าเท่ากันทีมที่ใช้เวลาน้อยกว่าชนะ</p>
+      <p class="kbd" style="text-align:left;margin-top:10px">อันดับเรียงตามจำนวนคำที่ถูก ถ้าเท่ากันทีมที่ใช้เวลาน้อยกว่าชนะ${S.round===2?' · รอบชิงนับเฉพาะคะแนนรอบชิง':''}</p>
     </section>
     <aside class="side">
-      <div class="pick">ทีมที่จะเล่น: <b>${esc(t.name)}</b></div>
+      <div class="pick">${S.round===1?'รอบที่ 1':'รอบชิง'} · ทีมที่จะเล่น: <b>${fins.length?esc(t.name):'ยังไม่ได้เลือกทีมเข้ารอบ'}</b></div>
       <div>
         <div class="label" style="margin-bottom:8px">เลือกชุดคำ (ขีดฆ่า = ใช้แล้ว)</div>
-        <div class="sets">${SETS.map((_,k)=>`<button type="button" class="set ${S.used.includes(k+1)?'used':''} ${S.selSet===k+1?'sel':''}" data-s="${k+1}">${k+1}</button>`).join('')}</div>
+        <div class="sets">${SETS.map((_,n)=>`<button type="button" class="set ${S.used.includes(n+1)?'used':''} ${S.selSet===n+1?'sel':''}" data-s="${n+1}">${n+1}</button>`).join('')}</div>
       </div>
       <div class="row">
         <button type="button" id="rand">🎲 สุ่มชุด</button>
         <span class="spacer"></span>
-        <button type="button" id="start" class="btn-go big" ${S.selSet?'':'disabled'}>เริ่มเกม ▶</button>
+        <button type="button" id="start" class="btn-go big" ${S.selSet&&fins.length?'':'disabled'}>เริ่ม ${sec} วินาที ▶</button>
       </div>
       <ol class="rules">
-        <li>พิธีกรกด “เริ่มเกม” จะนับถอยหลัง 3-2-1 แล้วจับเวลา 60 วินาที</li>
-        <li>ทีมเรียงตัวอักษรให้เป็นคำ ตอบถูกกด <kbd>Enter</kbd> หรือ ✓</li>
-        <li>ติดคำไหนกด <kbd>S</kbd> ข้าม คำนั้นจะวนกลับมาท้ายคิว</li>
+        <li>รอบที่ 1: ทุกทีม ทีมละ 60 วินาที · รอบชิง: ทีมที่เข้ารอบ ทีมละ 30 วินาที</li>
+        <li>พิธีกรกด “เริ่ม” จะนับถอยหลัง 3-2-1 แล้วจับเวลา</li>
+        <li>ตอบถูกกด <kbd>Enter</kbd> หรือ ✓ · ติดคำไหนกด <kbd>S</kbd> ข้าม</li>
         <li><kbd>Space</kbd> หยุด/เล่นต่อ · <kbd>A</kbd> เปิดเฉลยบนจอ</li>
       </ol>
       <div class="spacer"></div>
       <div class="row" id="resetRow">
-        ${resetArmed?`<div class="confirm row"><span>ล้างคะแนนทุกทีม?</span><button type="button" class="btn-stop" id="resetYes">ล้างเลย</button><button type="button" id="resetNo">ยกเลิก</button></div>`
+        ${resetArmed?`<div class="confirm row"><span>ล้างคะแนนทั้ง 2 รอบ?</span><button type="button" class="btn-stop" id="resetYes">ล้างเลย</button><button type="button" id="resetNo">ยกเลิก</button></div>`
         :`<button type="button" class="btn-ghost" id="reset">↺ เริ่มการแข่งขันใหม่</button>`}
       </div>
     </aside>
   </div></div>`;
+  main.querySelectorAll('.rounds button').forEach(b=>b.onclick=()=>setRound(+b.dataset.r));
   main.querySelectorAll('.team').forEach(el=>{
-    el.addEventListener('click',e=>{ if(e.target.tagName==='INPUT') return; S.selTeam=+el.dataset.i; save(); renderHome(); });
-    el.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target===el){ S.selTeam=+el.dataset.i; save(); renderHome(); }});
+    const i=+el.dataset.i;
+    el.addEventListener('click',e=>{ if(e.target.tagName==='INPUT'||e.target.closest('label')||!eligible(i)) return; S.selTeam=i; save(); renderHome(); });
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target===el&&eligible(i)){ S.selTeam=i; save(); renderHome(); }});
   });
-  main.querySelectorAll('.team input').forEach((inp,i)=>{
-    inp.addEventListener('focus',()=>{ if(S.selTeam!==i){ S.selTeam=i; save(); main.querySelectorAll('.team').forEach((c,k)=>c.classList.toggle('sel',k===i)); $('.pick b').textContent=S.teams[i].name; } });
+  main.querySelectorAll('.team input[id^="tn"]').forEach(inp=>{
+    const i=+inp.id.slice(2);
     inp.addEventListener('input',()=>{ S.teams[i].name=inp.value||('ทีม '+(i+1)); save(); if(S.selTeam===i) $('.pick b').textContent=S.teams[i].name; });
   });
+  main.querySelectorAll('input[data-f]').forEach(cb=>cb.onchange=()=>{ const i=+cb.dataset.f; S.teams[i].fin=cb.checked; if(cb.checked) S.selTeam=i; save(); renderHome(); });
   main.querySelectorAll('.set').forEach(b=>b.onclick=()=>{ S.selSet=+b.dataset.s; save(); renderHome(); });
-  $('#rand').onclick=()=>{ const free=SETS.map((_,k)=>k+1).filter(k=>!S.used.includes(k)); if(!free.length) return; S.selSet=free[Math.floor(Math.random()*free.length)]; save(); renderHome(); };
+  $('#rand').onclick=()=>{ const free=SETS.map((_,n)=>n+1).filter(n=>!S.used.includes(n)); if(!free.length) return; S.selSet=free[Math.floor(Math.random()*free.length)]; save(); renderHome(); };
   $('#start').onclick=()=>startRound();
   if($('#reset')) $('#reset').onclick=()=>{resetArmed=true;renderHome();};
   if($('#resetNo')) $('#resetNo').onclick=()=>{resetArmed=false;renderHome();};
@@ -211,7 +254,7 @@ function renderHome(){
 let R=null, timer=null;
 function startRound(){
   const words = SETS[S.selSet-1].map((w,k)=>({...w,k,st:null}));
-  R={team:S.selTeam,set:S.selSet,words,queue:words.map(w=>w.k),left:TIME,running:false,phase:'count',reveal:false};
+  R={team:S.selTeam,round:S.round,time:TIMES[S.round],set:S.selSet,words,queue:words.map(w=>w.k),left:TIMES[S.round],running:false,phase:'count',reveal:false};
   $('#btnHome').hidden=false;
   renderPlay(); countdown();
 }
@@ -220,7 +263,7 @@ function countdown(){
   clearInterval(window._cd);
   const iv=window._cd=setInterval(()=>{ if(!R||R.phase!=='count'){clearInterval(iv);return;} n--; if(n>0){ paintOverlay(n); beep(600,.15);} else { clearInterval(iv); R.phase='play'; sfx.go(); resume(); renderPlay(); } },900);
 }
-function paintOverlay(n){ const o=$('#ov'); if(o) o.innerHTML=`<h2>${esc(S.teams[R.team].name)} · ชุดที่ ${R.set}</h2><div class="count">${n}</div>`; }
+function paintOverlay(n){ const o=$('#ov'); if(o) o.innerHTML=`<h2>${R.round===2?'รอบชิง · ':'รอบที่ 1 · '}${esc(S.teams[R.team].name)} · ชุดที่ ${R.set}</h2><div class="count">${n}</div>`; }
 function resume(){ R.running=true; clearInterval(timer); timer=setInterval(tick,1000); paintClock(); }
 function pause(){ R.running=false; clearInterval(timer); }
 function tick(){
@@ -236,7 +279,7 @@ function renderPlay(){
   main.innerHTML=`
   <div class="screen">
     <div class="playbar">
-      <div class="who">${esc(S.teams[R.team].name)}<small>ชุดที่ ${R.set}</small></div>
+      <div class="who">${esc(S.teams[R.team].name)}<small>${R.round===2?'รอบชิง':'รอบที่ 1'} · ชุดที่ ${R.set}</small></div>
       <div class="dots" aria-label="ความคืบหน้า">${R.words.map(x=>`<span class="dot ${x.st==='ok'?'ok':x.st==='skip'?'skip':''} ${w&&x.k===w.k?'cur':''}"></span>`).join('')}</div>
       <span class="spacer"></span>
       <div><div class="label">ถูก</div><div class="score-now">${correct}/5</div></div>
@@ -273,7 +316,7 @@ function renderPlay(){
 function paintClock(){
   const n=$('#clockN'),a=$('#arc'),c=$('#clock'); if(!n) return;
   n.textContent=Math.max(0,R.left);
-  a.style.strokeDashoffset = 276.46*(1-Math.max(0,R.left)/TIME);
+  a.style.strokeDashoffset = 276.46*(1-Math.max(0,R.left)/R.time);
   a.style.stroke = R.left<=10?'#FF0000':'#00A5DB';
   c.classList.toggle('warn',R.left<=10&&R.running);
 }
@@ -295,11 +338,11 @@ function finish(){
   if(!R||R.phase==='done') return;
   pause(); R.phase='done'; sfx.end();
   const score=R.words.filter(w=>w.st==='ok').length;
-  const used=TIME-Math.max(0,R.left);
-  const t=S.teams[R.team]; t.score=score; t.time=used; t.set=R.set;
+  const used=R.time-Math.max(0,R.left);
+  const t=S.teams[R.team]; t.r[R.round-1]={score,time:used,set:R.set};
   if(!S.used.includes(R.set)) S.used.push(R.set);
-  // next unplayed team becomes selected
-  const nxt=S.teams.findIndex(x=>x.score===null); if(nxt>=0) S.selTeam=nxt; S.selSet=null;
+  // next unplayed team in this round becomes selected
+  const nxt=S.teams.findIndex((x,i)=>eligible(i)&&!x.r[R.round-1]); if(nxt>=0) S.selTeam=nxt; S.selSet=null;
   save(); renderResult(score,used);
 }
 function renderResult(score,used){
@@ -307,7 +350,7 @@ function renderResult(score,used){
   main.innerHTML=`
   <div class="screen">
     <div class="playbar">
-      <div class="who">${esc(t.name)}<small>ชุดที่ ${R.set} · ใช้เวลา ${used} วินาที</small></div>
+      <div class="who">${esc(t.name)}<small>${R.round===2?'รอบชิง':'รอบที่ 1'} · ชุดที่ ${R.set} · ใช้เวลา ${used} วินาที</small></div>
       <span class="spacer"></span>
       <div style="text-align:right"><div class="label">คะแนนรอบนี้</div><div class="bigscore">${score}<span style="font-size:.45em;color:var(--muted)"> / 5</span></div></div>
     </div>
