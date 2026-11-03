@@ -288,7 +288,9 @@ function openWheel(){
   W.pool=wheelPool(); W.pick=null;
   $('#wmSub').textContent = W.pool.length ? `${S.round===1?'รอบที่ 1':'รอบชิง'} · สุ่มจากทีมที่ยังไม่ได้เล่น ${W.pool.length} ทีม` : 'ทุกทีมในรอบนี้เล่นครบแล้ว';
   $('#wmRes').innerHTML=''; $('#wmUse').hidden=true; $('#wmSpin').disabled=W.pool.length<1;
-  $('#wm').hidden=false; drawWheel(); $('#wmSpin').focus();
+  $('#wm').hidden=false; drawWheel(); requestAnimationFrame(()=>requestAnimationFrame(drawWheel)); setTimeout(drawWheel,250);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ if(!$('#wm').hidden) drawWheel(); });
+  $('#wmSpin').focus();
 }
 function closeWheel(){ if(W.spinning) return; $('#wm').hidden=true; }
 function drawWheel(){
@@ -305,7 +307,8 @@ function drawWheel(){
     ctx.beginPath(); ctx.moveTo(cx,cx); ctx.arc(cx,cx,R,s,s+a); ctx.closePath();
     ctx.fillStyle=WCOL[i%WCOL.length]; ctx.fill();
     ctx.strokeStyle='#FFFFFF'; ctx.lineWidth=2*dpr; ctx.stroke();
-    ctx.save(); ctx.translate(cx,cx); ctx.rotate(s+a/2);
+    const mid=((s+a/2)%(2*Math.PI)+2*Math.PI)%(2*Math.PI); const flip=mid>Math.PI/2&&mid<3*Math.PI/2;
+    ctx.save(); ctx.translate(cx,cx); ctx.rotate(flip?mid+Math.PI:mid);
     const name=S.teams[ti].name, maxW=R*0.70, inner=R*0.2;
     const maxH = n===1 ? R*0.2 : Math.min(R*0.14, 2*R*0.55*Math.sin(a/2)*0.75);
     let fs=maxH; ctx.font=`700 ${fs}px "IBM Plex Sans Thai","Leelawadee UI",Tahoma,sans-serif`;
@@ -318,8 +321,8 @@ function drawWheel(){
       while(Math.max(...lines.map(l=>ctx.measureText(l).width))>maxW && fs>11*dpr){ fs-=1*dpr; ctx.font=`700 ${fs}px "IBM Plex Sans Thai","Leelawadee UI",Tahoma,sans-serif`; }
     }
     ctx.fillStyle = WCOL[i%WCOL.length]==='#E8A400' ? '#19226D' : '#FFFFFF';
-    ctx.textAlign='right'; ctx.textBaseline='middle';
-    const lh=fs*1.15, x=R*0.92, y0=-(lines.length-1)*lh/2;
+    ctx.textAlign=flip?'left':'right'; ctx.textBaseline='middle';
+    const lh=fs*1.15, x=flip?-R*0.92:R*0.92, y0=-(lines.length-1)*lh/2;
     lines.forEach((l,k)=>{ let t=l; while(ctx.measureText(t).width>maxW && t.length>2) t=t.slice(0,-2)+'…'; ctx.fillText(t,x,y0+k*lh); });
     ctx.restore();
   });
@@ -356,6 +359,7 @@ $('#wmUse').onclick=()=>{ if(W.pick===null) return; S.selTeam=W.pick; save(); $(
 $('#wm').addEventListener('click',e=>{ if(e.target.id==='wm') closeWheel(); });
 document.addEventListener('keydown',e=>{ if($('#wm').hidden) return; if(e.key==='Escape') closeWheel(); else if(e.key===' '&&e.target.tagName!=='BUTTON'){ e.preventDefault(); spinWheel(); } });
 window.addEventListener('resize',()=>{ if(!$('#wm').hidden) drawWheel(); });
+if(window.ResizeObserver) new ResizeObserver(()=>{ if(!$('#wm').hidden&&!W.spinning) drawWheel(); }).observe($('#wheel'));
 
 /* ---------- PLAY ---------- */
 let R=null, timer=null;
