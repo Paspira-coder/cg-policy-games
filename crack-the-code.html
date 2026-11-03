@@ -180,7 +180,6 @@ function renderHome(){
         <li>ทีมเรียงตัวอักษรให้เป็นคำ ตอบถูกกด <kbd>Enter</kbd> หรือ ✓</li>
         <li>ติดคำไหนกด <kbd>S</kbd> ข้าม คำนั้นจะวนกลับมาท้ายคิว</li>
         <li><kbd>Space</kbd> หยุด/เล่นต่อ · <kbd>A</kbd> เปิดเฉลยบนจอ</li>
-        <li>คำหมวดทั่วไป (เช่น อาหาร วัตถุดิบ) ไม่มีคำใบ้</li>
       </ol>
       <div class="spacer"></div>
       <div class="row" id="resetRow">
@@ -243,8 +242,7 @@ function renderPlay(){
     <div class="board ${R.reveal?'revealed':''}">
       ${w?`
       <div class="tiles ${w.t.length>10?'small':''}">${w.t.map((c,i)=>`<div class="tile" style="animation-delay:${i*40}ms">${esc(c)}</div>`).join('')}</div>
-      ${R.reveal?`<div class="answer">เฉลย → <b>${esc(w.a)}</b></div>`:''}
-      ${w.h?`<div class="hint"><span class="label">คำใบ้</span>${esc(w.h)}</div>`:`<div class="hint none"><span class="label">คำใบ้</span>คำทั่วไป ไม่มีคำใบ้</div>`}`:''}
+      ${R.reveal?`<div class="answer">เฉลย → <b>${esc(w.a)}</b></div>`:''}`:''}
       <div class="flash" id="flash"></div>
       ${R.phase==='count'?`<div class="overlay" id="ov"></div>`:''}
       ${R.phase==='play'&&!R.running?`<div class="overlay"><h2>หยุดเวลาชั่วคราว</h2><button type="button" class="btn-cyan big" id="resumeBtn">เล่นต่อ ▶</button></div>`:''}
@@ -315,7 +313,6 @@ function renderResult(score,used){
       <div class="rcard ${w.st==='ok'?'ok':''}">
         <div class="st">${w.st==='ok'?'✓ ตอบถูก':'✗ ยังไม่ได้'}</div>
         <div class="w">${esc(w.a)}</div>
-        <div class="h">${esc(w.h||'คำทั่วไป')}</div>
       </div>`).join('')}</div>
     <div class="spacer"></div>
     <div class="controls"><button type="button" class="btn-cyan big" id="back">ไปตารางคะแนน →</button></div>
