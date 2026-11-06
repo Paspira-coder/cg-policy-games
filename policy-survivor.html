@@ -3,16 +3,17 @@
 <title>Policy Survivor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Kanit:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: follows Example.pptx — white slide, navy title top-left, big question, green/red answer table. Deliberately single light theme to match the corporate slide. */
+/* Layout: one-screen game for a projector. Theme: night temple fair (งานวัด) — dark night sky, gold booth-sign accents, red buttons, bunting and fairy lights on top. */
 :root{
-  --bg:#FFFFFF; --ink:#19226D; --muted:#5B6391; --line:#D6DBEE; --soft:#F3F6FC;
-  --cyan:#00A5DB; --go:#00B050; --stop:#FF0000; --hl:#FFF4C2;
+  --bg:#1A0F33; --ink:#FFF3D6; --muted:#C4B5E6; --line:#4B3A7D; --soft:#251748;
+  --cyan:#FFD23F; --go:#17A653; --stop:#FF3B5C; --gold:#FFB020; --hl:#3B2468; --red:#E0262F;
+  --deco:"Chonburi","Kanit","Leelawadee UI",serif;
   --display:"Kanit","Leelawadee UI","Tahoma",sans-serif;
   --body:"IBM Plex Sans Thai","Leelawadee UI","Tahoma",sans-serif;
  
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -72,10 +73,51 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
 .how input{font-family:var(--display);font-size:20px;width:6ch;padding:6px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-@media (max-width:900px){.intro{grid-template-columns:1fr}@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){.intro{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ===== Theme: งานวัด — night temple fair: bunting flags, fairy-light bulbs, ferris wheel glow, booth-sign gold and red ===== */
+body{background:radial-gradient(ellipse 70% 45% at 50% 118%,rgba(255,130,40,.30),transparent 70%),radial-gradient(ellipse 40% 40% at 0% 105%,rgba(255,59,138,.20),transparent 70%),linear-gradient(180deg,#110824 0%,var(--bg) 55%);background-color:var(--bg)}
+body::after{content:"";position:fixed;right:-30px;bottom:-24px;width:min(42vw,480px);aspect-ratio:400/420;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 420' fill='none' stroke='%23FFD23F' stroke-width='4' stroke-linecap='round'><circle cx='200' cy='180' r='150'/><circle cx='200' cy='180' r='118'/><circle cx='200' cy='180' r='18' fill='%23FFD23F'/><g id='s'><line x1='200' y1='30' x2='200' y2='330'/><line x1='50' y1='180' x2='350' y2='180'/><line x1='94' y1='74' x2='306' y2='286'/><line x1='306' y1='74' x2='94' y2='286'/><line x1='125' y1='50' x2='275' y2='310'/><line x1='275' y1='50' x2='125' y2='310'/><line x1='70' y1='105' x2='330' y2='255'/><line x1='330' y1='105' x2='70' y2='255'/></g><g fill='%23FFD23F'><rect x='188' y='22' width='24' height='20' rx='5'/><rect x='188' y='320' width='24' height='20' rx='5'/><rect x='38' y='171' width='24' height='20' rx='5'/><rect x='338' y='171' width='24' height='20' rx='5'/><rect x='82' y='66' width='24' height='20' rx='5'/><rect x='294' y='66' width='24' height='20' rx='5'/><rect x='82' y='277' width='24' height='20' rx='5'/><rect x='294' y='277' width='24' height='20' rx='5'/></g><line x1='200' y1='180' x2='110' y2='410'/><line x1='200' y1='180' x2='290' y2='410'/><line x1='80' y1='410' x2='320' y2='410'/></svg>") center/contain no-repeat;opacity:.09;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1}
+.fair-top{flex:none;position:relative;z-index:2;height:44px;pointer-events:none}
+.fair-top .bunting{position:absolute;inset:0 0 auto 0;height:30px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='30' viewBox='0 0 140 30'><path d='M0 4 Q70 9 140 4' stroke='%23FFE9A8' stroke-width='1.5' fill='none'/><path d='M4 4.4 L24 5.6 L14 25Z' fill='%23E0262F'/><path d='M32 6 L52 6.8 L42 26Z' fill='%23FFB020'/><path d='M60 6.7 L80 6.7 L70 26.5Z' fill='%2317A653'/><path d='M88 6.8 L108 6 L98 26Z' fill='%23FF3B8A'/><path d='M116 5.6 L136 4.4 L126 25Z' fill='%232F6FE0'/></svg>") 0 0/140px 30px repeat-x}
+.fair-top .bulbs{position:absolute;left:0;right:0;top:30px;height:14px}
+.fair-top .bulbs::before,.fair-top .bulbs::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,#FFF4B8 0 3px,rgba(255,210,63,.55) 4px,transparent 7px) 8px 50%/36px 14px repeat-x;animation:twinkle 1.4s ease-in-out infinite alternate}
+.fair-top .bulbs::after{background-image:radial-gradient(circle,#FFD0E6 0 3px,rgba(255,59,138,.55) 4px,transparent 7px);background-position:26px 50%;animation-delay:.7s}
+@keyframes twinkle{from{opacity:.35}to{opacity:1}}
+.title,.intro h2,.count,.bigscore,.winner,.wheel-card h2{font-family:var(--deco)}
+.title{color:var(--cyan);font-weight:400;letter-spacing:.3px;text-shadow:0 0 18px rgba(255,210,63,.35)}
+.title b{color:var(--ink)}
+.intro h2{font-weight:400;text-shadow:0 0 24px rgba(255,210,63,.25)}
+.btn-cyan,.primary{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 2px rgba(255,210,63,.35) inset}
+.btn-cyan:hover,.primary:hover{background:#F23B44}
+.btn-go:hover{background:#1DBA5E}
+.btn-stop:hover{background:#FF5470}
+.set.sel,.rounds button.on,.seg button.on{background:var(--cyan);border-color:var(--cyan);color:#2A1500}
+.rounds button.on small{color:#5A3A00}
+.team.sel{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(255,210,63,.28)}
+.dot.cur{box-shadow:0 0 0 3px rgba(255,210,63,.3)}
+.side,.how{background:rgba(37,23,72,.85)}
+.team{background:rgba(26,15,51,.85)}
+.overlay{background:rgba(22,12,44,.95)}
+.flash.ans{background:rgba(22,12,44,.94)}
+.tile{border-bottom-color:rgba(255,210,63,.5);text-shadow:0 0 22px rgba(255,210,63,.22)}
+.answer b{color:var(--cyan)}
+.tag{background:var(--cyan);color:#2A1500}
+.winner{font-weight:400;border:2px solid var(--cyan);box-shadow:0 0 30px rgba(255,210,63,.25)}
+.winner small{font-family:var(--body)}
+.wheel-modal{background:rgba(8,4,20,.75)}
+.wheel-card{background:var(--soft);border:2px solid var(--cyan);box-shadow:0 0 0 6px rgba(255,210,63,.12),0 20px 60px rgba(0,0,0,.5)}
+.wheel-card h2{font-weight:400;color:var(--cyan)}
+.wheel-hub{background:var(--red);border-color:var(--cyan);color:#fff}
+.answers{border-color:var(--cyan)}
+.answers .no{border-left-color:var(--cyan)}
+.reveal .ref b{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){.fair-top .bulbs::before,.fair-top .bulbs::after{animation:none;opacity:1}}
 </style>
 
 </head><body>
+<div class="fair-top" aria-hidden="true"><div class="bunting"></div><div class="bulbs"></div></div>
 <div class="app">
   <header>
     <h1 class="title">Activity 2: Policy Survivor <b>รู้จริง ต้องรอด!</b></h1>

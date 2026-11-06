@@ -3,16 +3,17 @@
 <title>Crack the Code</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Kanit:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: follows Example.pptx — white slide, navy title top-left, scrambled letters set large in the middle. Host controls sit below the puzzle. Deliberately single light theme to match the corporate slide. */
+/* Layout: one-screen game for a projector. Theme: night temple fair (งานวัด) — dark night sky, gold booth-sign accents, red buttons, bunting and fairy lights on top. */
 :root{
-  --bg:#FFFFFF; --ink:#19226D; --muted:#5B6391; --line:#D6DBEE; --soft:#F3F6FC;
-  --cyan:#00A5DB; --go:#00B050; --stop:#FF0000; --gold:#E8A400; --hl:#FFF4C2;
+  --bg:#1A0F33; --ink:#FFF3D6; --muted:#C4B5E6; --line:#4B3A7D; --soft:#251748;
+  --cyan:#FFD23F; --go:#17A653; --stop:#FF3B5C; --gold:#FFB020; --hl:#3B2468; --red:#E0262F;
+  --deco:"Chonburi","Kanit","Leelawadee UI",serif;
   --display:"Kanit","Leelawadee UI","Tahoma",sans-serif;
   --body:"IBM Plex Sans Thai","Leelawadee UI","Tahoma",sans-serif;
  
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -124,10 +125,51 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;paddi
 .wheel-res{min-height:1.6em;font-weight:700;font-size:clamp(22px,2.8vw,36px);text-align:center;max-width:30ch;text-wrap:balance}
 .wheel-res small{display:block;font-size:.45em;color:var(--muted);font-weight:600;letter-spacing:1px}
 .confirm{border:1.5px solid var(--stop);border-radius:10px;padding:8px 12px;background:var(--bg)}
-@media (max-width:900px){.home{grid-template-columns:1fr}.res{grid-template-columns:repeat(2,minmax(0,1fr))}.teams{grid-template-columns:1fr}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:900px){.home{grid-template-columns:1fr}.res{grid-template-columns:repeat(2,minmax(0,1fr))}.teams{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== Theme: งานวัด — night temple fair: bunting flags, fairy-light bulbs, ferris wheel glow, booth-sign gold and red ===== */
+body{background:radial-gradient(ellipse 70% 45% at 50% 118%,rgba(255,130,40,.30),transparent 70%),radial-gradient(ellipse 40% 40% at 0% 105%,rgba(255,59,138,.20),transparent 70%),linear-gradient(180deg,#110824 0%,var(--bg) 55%);background-color:var(--bg)}
+body::after{content:"";position:fixed;right:-30px;bottom:-24px;width:min(42vw,480px);aspect-ratio:400/420;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 420' fill='none' stroke='%23FFD23F' stroke-width='4' stroke-linecap='round'><circle cx='200' cy='180' r='150'/><circle cx='200' cy='180' r='118'/><circle cx='200' cy='180' r='18' fill='%23FFD23F'/><g id='s'><line x1='200' y1='30' x2='200' y2='330'/><line x1='50' y1='180' x2='350' y2='180'/><line x1='94' y1='74' x2='306' y2='286'/><line x1='306' y1='74' x2='94' y2='286'/><line x1='125' y1='50' x2='275' y2='310'/><line x1='275' y1='50' x2='125' y2='310'/><line x1='70' y1='105' x2='330' y2='255'/><line x1='330' y1='105' x2='70' y2='255'/></g><g fill='%23FFD23F'><rect x='188' y='22' width='24' height='20' rx='5'/><rect x='188' y='320' width='24' height='20' rx='5'/><rect x='38' y='171' width='24' height='20' rx='5'/><rect x='338' y='171' width='24' height='20' rx='5'/><rect x='82' y='66' width='24' height='20' rx='5'/><rect x='294' y='66' width='24' height='20' rx='5'/><rect x='82' y='277' width='24' height='20' rx='5'/><rect x='294' y='277' width='24' height='20' rx='5'/></g><line x1='200' y1='180' x2='110' y2='410'/><line x1='200' y1='180' x2='290' y2='410'/><line x1='80' y1='410' x2='320' y2='410'/></svg>") center/contain no-repeat;opacity:.09;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1}
+.fair-top{flex:none;position:relative;z-index:2;height:44px;pointer-events:none}
+.fair-top .bunting{position:absolute;inset:0 0 auto 0;height:30px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='30' viewBox='0 0 140 30'><path d='M0 4 Q70 9 140 4' stroke='%23FFE9A8' stroke-width='1.5' fill='none'/><path d='M4 4.4 L24 5.6 L14 25Z' fill='%23E0262F'/><path d='M32 6 L52 6.8 L42 26Z' fill='%23FFB020'/><path d='M60 6.7 L80 6.7 L70 26.5Z' fill='%2317A653'/><path d='M88 6.8 L108 6 L98 26Z' fill='%23FF3B8A'/><path d='M116 5.6 L136 4.4 L126 25Z' fill='%232F6FE0'/></svg>") 0 0/140px 30px repeat-x}
+.fair-top .bulbs{position:absolute;left:0;right:0;top:30px;height:14px}
+.fair-top .bulbs::before,.fair-top .bulbs::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,#FFF4B8 0 3px,rgba(255,210,63,.55) 4px,transparent 7px) 8px 50%/36px 14px repeat-x;animation:twinkle 1.4s ease-in-out infinite alternate}
+.fair-top .bulbs::after{background-image:radial-gradient(circle,#FFD0E6 0 3px,rgba(255,59,138,.55) 4px,transparent 7px);background-position:26px 50%;animation-delay:.7s}
+@keyframes twinkle{from{opacity:.35}to{opacity:1}}
+.title,.intro h2,.count,.bigscore,.winner,.wheel-card h2{font-family:var(--deco)}
+.title{color:var(--cyan);font-weight:400;letter-spacing:.3px;text-shadow:0 0 18px rgba(255,210,63,.35)}
+.title b{color:var(--ink)}
+.intro h2{font-weight:400;text-shadow:0 0 24px rgba(255,210,63,.25)}
+.btn-cyan,.primary{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 2px rgba(255,210,63,.35) inset}
+.btn-cyan:hover,.primary:hover{background:#F23B44}
+.btn-go:hover{background:#1DBA5E}
+.btn-stop:hover{background:#FF5470}
+.set.sel,.rounds button.on,.seg button.on{background:var(--cyan);border-color:var(--cyan);color:#2A1500}
+.rounds button.on small{color:#5A3A00}
+.team.sel{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(255,210,63,.28)}
+.dot.cur{box-shadow:0 0 0 3px rgba(255,210,63,.3)}
+.side,.how{background:rgba(37,23,72,.85)}
+.team{background:rgba(26,15,51,.85)}
+.overlay{background:rgba(22,12,44,.95)}
+.flash.ans{background:rgba(22,12,44,.94)}
+.tile{border-bottom-color:rgba(255,210,63,.5);text-shadow:0 0 22px rgba(255,210,63,.22)}
+.answer b{color:var(--cyan)}
+.tag{background:var(--cyan);color:#2A1500}
+.winner{font-weight:400;border:2px solid var(--cyan);box-shadow:0 0 30px rgba(255,210,63,.25)}
+.winner small{font-family:var(--body)}
+.wheel-modal{background:rgba(8,4,20,.75)}
+.wheel-card{background:var(--soft);border:2px solid var(--cyan);box-shadow:0 0 0 6px rgba(255,210,63,.12),0 20px 60px rgba(0,0,0,.5)}
+.wheel-card h2{font-weight:400;color:var(--cyan)}
+.wheel-hub{background:var(--red);border-color:var(--cyan);color:#fff}
+.answers{border-color:var(--cyan)}
+.answers .no{border-left-color:var(--cyan)}
+.reveal .ref b{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){.fair-top .bulbs::before,.fair-top .bulbs::after{animation:none;opacity:1}}
 </style>
 
 </head><body>
+<div class="fair-top" aria-hidden="true"><div class="bunting"></div><div class="bulbs"></div></div>
 <div class="app">
   <header>
     <div><h1 class="title">Activity 1: <b>Crack the Code</b></h1><div class="sub">เรียงตัวอักษรให้เป็นคำ · 6 ทีม · ชุดละ 5 คำ · รอบที่ 1 ทีมละ 60 วินาที · รอบชิง 30 วินาที</div></div>
@@ -278,7 +320,7 @@ function renderHome(){
 }
 
 /* ---------- WHEEL ---------- */
-const WCOL=['#19226D','#00A5DB','#00B050','#E8A400','#3A4AB8','#0B7FB0'];
+const WCOL=['#E0262F','#FFB020','#17A653','#FF3B8A','#2F6FE0','#8B3FD9'];
 let W={pool:[],rot:0,spinning:false,pick:null};
 function wheelPool(){
   const k=RN();
@@ -299,15 +341,15 @@ function drawWheel(){
   const box=c.getBoundingClientRect(); const dpr=window.devicePixelRatio||1;
   const size=Math.max(200,Math.round((box.width||560)*dpr));
   if(c.width!==size){ c.width=size; c.height=size; }
-  const n=Math.max(1,W.pool.length), cx=size/2, R=size/2-6*dpr, a=2*Math.PI/n;
+  const n=Math.max(1,W.pool.length), cx=size/2, R=size/2-16*dpr, a=2*Math.PI/n;
   ctx.clearRect(0,0,size,size);
-  ctx.beginPath(); ctx.arc(cx,cx,R+4*dpr,0,2*Math.PI); ctx.fillStyle='#19226D'; ctx.fill();
-  if(!W.pool.length){ ctx.beginPath(); ctx.arc(cx,cx,R,0,2*Math.PI); ctx.fillStyle='#D6DBEE'; ctx.fill(); return; }
+  ctx.beginPath(); ctx.arc(cx,cx,R+14*dpr,0,2*Math.PI); ctx.fillStyle='#FFD23F'; ctx.fill();
+  if(!W.pool.length){ ctx.beginPath(); ctx.arc(cx,cx,R,0,2*Math.PI); ctx.fillStyle='#4B3A7D'; ctx.fill(); return; }
   W.pool.forEach((ti,i)=>{
     const s=-Math.PI/2+W.rot+i*a;
     ctx.beginPath(); ctx.moveTo(cx,cx); ctx.arc(cx,cx,R,s,s+a); ctx.closePath();
     ctx.fillStyle=WCOL[i%WCOL.length]; ctx.fill();
-    ctx.strokeStyle='#FFFFFF'; ctx.lineWidth=2*dpr; ctx.stroke();
+    ctx.strokeStyle='#FFE9A8'; ctx.lineWidth=2*dpr; ctx.stroke();
     const mid=((s+a/2)%(2*Math.PI)+2*Math.PI)%(2*Math.PI); const flip=mid>Math.PI/2&&mid<3*Math.PI/2;
     ctx.save(); ctx.translate(cx,cx); ctx.rotate(flip?mid+Math.PI:mid);
     const name=S.teams[ti].name, maxW=R*0.70, inner=R*0.2;
@@ -321,12 +363,14 @@ function drawWheel(){
       ctx.font=`700 ${fs}px "IBM Plex Sans Thai","Leelawadee UI",Tahoma,sans-serif`;
       while(Math.max(...lines.map(l=>ctx.measureText(l).width))>maxW && fs>11*dpr){ fs-=1*dpr; ctx.font=`700 ${fs}px "IBM Plex Sans Thai","Leelawadee UI",Tahoma,sans-serif`; }
     }
-    ctx.fillStyle = WCOL[i%WCOL.length]==='#E8A400' ? '#19226D' : '#FFFFFF';
+    ctx.fillStyle = WCOL[i%WCOL.length]==='#FFB020' ? '#2A1500' : '#FFFFFF';
     ctx.textAlign=flip?'left':'right'; ctx.textBaseline='middle';
     const lh=fs*1.15, x=flip?-R*0.92:R*0.92, y0=-(lines.length-1)*lh/2;
     lines.forEach((l,k)=>{ let t=l; while(ctx.measureText(t).width>maxW && t.length>2) t=t.slice(0,-2)+'…'; ctx.fillText(t,x,y0+k*lh); });
     ctx.restore();
   });
+  const nb=Math.max(16,n*4);
+  for(let b=0;b<nb;b++){ const t=b/nb*2*Math.PI+W.rot; ctx.beginPath(); ctx.arc(cx+Math.cos(t)*(R+7*dpr),cx+Math.sin(t)*(R+7*dpr),3.2*dpr,0,2*Math.PI); ctx.fillStyle=b%2?'#FFFFFF':'#E0262F'; ctx.fill(); }
 }
 function spinWheel(){
   if(W.spinning||!W.pool.length) return;
@@ -395,7 +439,7 @@ function renderPlay(){
       <div class="dots" aria-label="ความคืบหน้า">${R.words.map(x=>`<span class="dot ${x.st==='ok'?'ok':x.st==='skip'?'skip':''} ${w&&x.k===w.k?'cur':''}"></span>`).join('')}</div>
       <span class="spacer"></span>
       <div><div class="label">ถูก</div><div class="score-now">${correct}/5</div></div>
-      <div class="clock" id="clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#E3E7F4" stroke-width="8"/><circle id="arc" cx="50" cy="50" r="44" fill="none" stroke="#00A5DB" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="0"/></svg><div class="n" id="clockN">${R.left}</div></div>
+      <div class="clock" id="clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#3A2A66" stroke-width="8"/><circle id="arc" cx="50" cy="50" r="44" fill="none" stroke="#FFD23F" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="0"/></svg><div class="n" id="clockN">${R.left}</div></div>
     </div>
     <div class="board ${R.reveal?'revealed':''}">
       ${w?`
@@ -429,7 +473,7 @@ function paintClock(){
   const n=$('#clockN'),a=$('#arc'),c=$('#clock'); if(!n) return;
   n.textContent=Math.max(0,R.left);
   a.style.strokeDashoffset = 276.46*(1-Math.max(0,R.left)/R.time);
-  a.style.stroke = R.left<=10?'#FF0000':'#00A5DB';
+  a.style.stroke = R.left<=10?'#FF3B5C':'#FFD23F';
   c.classList.toggle('warn',R.left<=10&&R.running);
 }
 function togglePause(){ if(R.phase!=='play') return; R.running?pause():resume(); renderPlay(); }
@@ -437,14 +481,14 @@ function flash(txt,col,ans,dur){ const f=$('#flash'); if(!f) return; f.innerHTML
 function mark(){
   if(R.phase!=='play'||!R.running) return;
   const w=cur(); w.st='ok'; R.queue.shift(); R.reveal=false; sfx.ok();
-  if(!R.queue.length){ pause(); R.ending=true; renderPlay(); flash('ถูกต้อง!','#00B050',w.a,1800); setTimeout(()=>{ if(R&&R.phase==='play') finish(); },1700); return; }
-  renderPlay(); flash('ถูกต้อง!','#00B050',w.a,1600);
+  if(!R.queue.length){ pause(); R.ending=true; renderPlay(); flash('ถูกต้อง!','#3BE07F',w.a,1800); setTimeout(()=>{ if(R&&R.phase==='play') finish(); },1700); return; }
+  renderPlay(); flash('ถูกต้อง!','#3BE07F',w.a,1600);
 }
 function skip(){
   if(R.phase!=='play'||!R.running) return;
   if(R.queue.length<2){ sfx.skip(); return; }
   const w=cur(); w.st='skip'; R.queue.push(R.queue.shift()); R.reveal=false; sfx.skip();
-  renderPlay(); flash('ข้าม','#E8A400');
+  renderPlay(); flash('ข้าม','#FFB020');
 }
 function finish(){
   if(!R||R.phase==='done') return;
